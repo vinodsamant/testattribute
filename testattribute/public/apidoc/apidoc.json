@@ -1,0 +1,11 @@
+{
+	"name": "3rd Degree App",
+	"version": "1.0.0",
+	"description": "3rd Degree Api Documentation",
+	"title": "3rd Degree Api",
+	"url": "",
+	"template": {
+		"withCompare": true,
+		"withGenerator": true
+	}
+}

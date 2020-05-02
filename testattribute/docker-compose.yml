@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  3rd-degree-dev-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: 3rd-degree-dev-app
+    restart: always
+    volumes:
+      - ./:/var/www/html
+      - ./storage:/var/www/html/storage
+    networks:
+      - 3rd-degree-dev-network
+
+  3rd-degree-dev-webserver:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: 3rd-degree-dev-webserver
+    restart: always
+    volumes:
+      - ./public:/var/www/html/public
+      - ./devlogdna:/var/log/nginx
+    ports:
+      - "8081:80"
+    depends_on:
+      - 3rd-degree-dev-app
+    networks: 
+      - 3rd-degree-dev-network
+
+networks:
+  3rd-degree-dev-network:
+    driver: bridge

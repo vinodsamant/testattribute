@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  production-backend-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: production-backend-app
+    restart: always
+    volumes:
+      - ./:/var/www/html
+      - ./storage:/var/www/html/storage
+    networks:
+      - production-backend-network
+
+  production-backend-webserver:
+    build:
+      context: ./nginx-production
+      dockerfile: Dockerfile
+    container_name: production-backend-webserver
+    restart: always
+    volumes:
+      - ./public:/var/www/html/public
+      - ./productionlogdna:/var/log/nginx
+    ports:
+      - "8081:80"
+    depends_on:
+      - production-backend-app
+    networks: 
+      - production-backend-network
+
+networks:
+  production-backend-network:
+    driver: bridge

@@ -1,0 +1,59 @@
+version: 0.2
+
+phases:
+  install: 
+    runtime-versions:
+      docker: 19
+  pre_build: # commands to be run before build
+    commands:
+    - echo Logging in to Amazon ECR....
+    - aws --version
+    # login to Elastic container registry
+    - eval $(aws ecr get-login --region us-east-1 --no-include-email | sed 's|https://||')
+    - REPOSITORY_URI=784910443287.dkr.ecr.us-east-1.amazonaws.com/third-degree/dev-backend
+    - IMAGE_TAG=1.0
+    - NGINX_IMAGE_TAG=2.0
+  build:
+    commands:
+    - echo Build started on `date`
+    - echo update composer..
+    - composer update
+    - echo creating .env file..
+      #- cp .env.example .env
+    - curl -sS -o .env  https://environments-files.s3.amazonaws.com/dev.yml
+    - ls -lrtha
+    - echo cleagin cache..
+    - php artisan config:cache
+      ############   
+    - php artisan migrate
+      #############
+    - php artisan route:clear
+      ########## 
+    - php artisan config:cache
+      ###############
+    - echo generating app key
+    - php artisan key:generate
+      ############
+    - npm install apidoc -g
+    - pwd
+      ###listing ###
+    - ll -R public/apidoc/  
+    - echo Building the Docker image... 
+    - docker build -t $REPOSITORY_URI:latest .
+    - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+    #Nginx Image Building 
+    - echo Build started on `date`
+    - echo Building the Ningx Docker image...
+    - docker build -t nginxserver:latest -f Dockerfile-nginx .
+    - docker tag nginxserver:latest $REPOSITORY_URI:$NGINX_IMAGE_TAG 
+    
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker image...
+      - docker image ls -a
+      # php-fpm images pushing on repo
+      - docker push $REPOSITORY_URI:$IMAGE_TAG  
+      #Nginx image pushin on repo
+      - docker push $REPOSITORY_URI:$NGINX_IMAGE_TAG
+      

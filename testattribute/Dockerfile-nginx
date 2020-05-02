@@ -1,0 +1,7 @@
+FROM nginx
+
+COPY ./public/ /var/www/html/public/
+COPY ./nginx/conf.d/ /etc/nginx/conf.d/
+
+WORKDIR /var/www/html
+

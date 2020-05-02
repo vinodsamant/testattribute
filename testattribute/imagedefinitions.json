@@ -1,0 +1,6 @@
+[
+  {
+    "name": "QA-App",
+    "imageUri": "784910443287.dkr.ecr.us-east-1.amazonaws.com/third-degree/backend-qa:1.0"
+  }
+]
