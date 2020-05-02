@@ -10,7 +10,7 @@ phases:
     - aws --version
     # login to Elastic container registry
     - eval $(aws ecr get-login --region us-east-1 --no-include-email | sed 's|https://||')
-    - REPOSITORY_URI=784910443287.dkr.ecr.us-east-1.amazonaws.com/third-degree/backend-dev
+    - REPOSITORY_URI=784910443287.dkr.ecr.us-east-1.amazonaws.com/third-degree/backend-qa
     - IMAGE_TAG=1.0
     - NGINX_IMAGE_TAG=2.0
   build:
@@ -20,7 +20,7 @@ phases:
     - composer update
     - echo creating .env file..
       #- cp .env.example .env
-    - curl -sS -o .env  https://environments-files.s3.amazonaws.com/dev.yml
+    - curl -sS -o .env  https://environments-files.s3.amazonaws.com/qa.yml
     - ls -lrtha
     - echo cleagin cache..
     - php artisan config:cache
