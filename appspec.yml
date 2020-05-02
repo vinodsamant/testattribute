@@ -3,7 +3,7 @@ Resources:
   - TargetService:
       Type: AWS::ECS::Service
       Properties:
-        TaskDefinition: "Backen-QA-Def"
+        TaskDefinition: "Backen-Dev-Def"
         LoadBalancerInfo:
-          ContainerName: "QA-App"
+          ContainerName: "Dev-App"
           ContainerPort: 9000
